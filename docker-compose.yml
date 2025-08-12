@@ -5,6 +5,10 @@ services:
       context: ./presidio-anonymizer
       args:
         - NAME=presidio-anonymizer
+      x-bake:
+          platforms:
+            - linux/amd64
+            - linux/arm64
     environment:
       - PORT=5001
     ports:
@@ -15,6 +19,10 @@ services:
       context: ./presidio-analyzer
       args:
         - NAME=presidio-analyzer
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
     environment:
       - PORT=5001
     ports:
@@ -25,6 +33,11 @@ services:
       context: ./presidio-image-redactor
       args:
         - NAME=presidio-image-redactor
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+
     environment:
       - PORT=5001
     ports:
