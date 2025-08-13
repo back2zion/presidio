@@ -1,0 +1,27 @@
+# GPU용 추가 패키지 (H100 지원)
+torch==2.1.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+torchvision==0.16.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+torchaudio==2.1.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+
+# Transformers 및 관련 패키지
+transformers==4.36.2
+tokenizers==0.15.0
+datasets==2.16.1
+accelerate==0.25.0
+
+# 한국어 NLP 패키지
+konlpy==0.6.0
+soynlp==0.0.493
+
+# LLM 서빙용 패키지
+vllm==0.2.6
+langchain==0.1.0
+sentence-transformers==2.2.2
+
+# GPU 모니터링
+nvidia-ml-py3==7.352.0
+gpustat==1.1.1
+
+# 성능 최적화
+numba==0.59.0
+cupy-cuda12x==13.0.0

@@ -15,7 +15,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 애플리케이션 파일 복사
-COPY korea_expressway_pii_remover.py .
+COPY remover.py .
+COPY templates/ ./templates/
 COPY 한국도로공사_민원_테스트데이터.xlsx .
 
 # 포트 노출
@@ -26,4 +27,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:5000/ || exit 1
 
 # 애플리케이션 실행
-CMD ["python", "korea_expressway_pii_remover.py"]
+CMD ["python", "remover.py"]

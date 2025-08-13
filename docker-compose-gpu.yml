@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  korea-expressway-pii-remover-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    container_name: korea-expressway-pii-remover-gpu
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=7  # H100 7번 GPU 지정
+      - NVIDIA_VISIBLE_DEVICES=7
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:2048
+      - CUDA_MEMORY_FRACTION=0.9
+      - TRANSFORMERS_OFFLINE=1
+      - HF_DATASETS_OFFLINE=1
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['7']  # H100 7번 GPU 전용
+              capabilities: [gpu]
+    shm_size: 8gb
+    mem_limit: 32g
+    cpus: 8
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
