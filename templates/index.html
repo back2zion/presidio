@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛣️ 한국도로공사 민원 데이터 개인정보 제거 도구</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .drop-zone {
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            padding: 50px 20px;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #fafafa;
+        }
+        
+        .drop-zone.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: scale(1.02);
+        }
+        
+        .drop-zone-content {
+            pointer-events: none;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .progress {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .progress-details {
+            text-align: center;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            color: #333;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .result {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .features h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-item::before {
+            content: "✅";
+            margin-right: 8px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🛣️ 한국도로공사 민원 데이터<br>개인정보 제거 도구</h1>
+            <p class="subtitle">엑셀 파일을 업로드하면 자동으로 개인정보가 마스킹됩니다</p>
+        </div>
+        
+        <div class="processing-mode" style="margin-bottom: 20px;">
+            <h3 style="color: #333; margin-bottom: 15px;">🤖 처리 모드 선택</h3>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="radio" name="processing_mode" value="llm" style="margin-right: 8px;">
+                    <span style="font-size: 14px; color: #333;">
+                        🧠 LLM 모드
+                        <br><small style="color: #666;">문맥 이해로 정확한 PII 식별 (느림)</small>
+                    </span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="radio" name="processing_mode" value="regex" checked style="margin-right: 8px;">
+                    <span style="font-size: 14px; color: #333;">
+                        ⚡ 정규식 모드 (추천)
+                        <br><small style="color: #666;">빠른 패턴 기반 처리</small>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-content">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">엑셀 파일을 여기에 드래그하거나 클릭하여 선택하세요</div>
+                <div class="upload-hint">(.xlsx 파일만 지원, 최대 50MB)</div>
+            </div>
+        </div>
+        
+        <input type="file" id="fileInput" class="file-input" accept=".xlsx">
+        
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-details">
+                <p id="progressMessage">개인정보 제거 중... 잠시만 기다려주세요 ⏳</p>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">현재 컬럼:</span>
+                        <span id="currentColumn" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">진행률:</span>
+                        <span id="progressPercent" class="stat-value">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">처리 속도:</span>
+                        <span id="progressSpeed" class="stat-value">0.0 건/초</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">남은 시간:</span>
+                        <span id="progressETA" class="stat-value">계산 중...</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">진행 상황:</span>
+                        <span id="progressCount" class="stat-value">0 / 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result" id="result">
+            <p id="resultMessage"></p>
+        </div>
+        
+        <button class="btn" id="resetBtn" style="display: none;">🔄 새 파일 처리하기</button>
+        
+        <div class="features">
+            <h3>🔍 마스킹되는 개인정보</h3>
+            <div class="feature-list">
+                <div class="feature-item">담당자 이름 (정제호 대리 → [담당자명])</div>
+                <div class="feature-item">개인 이름 (김철수 → [이름])</div>
+                <div class="feature-item">연락처 (010-1234-5678 → [연락처])</div>
+                <div class="feature-item">이메일 (test@ex.co.kr → [이메일주소])</div>
+                <div class="feature-item">기관정보 (한국도로공사... → [기관연락처정보])</div>
+                <div class="feature-item">차량번호 (12가3456 → [차량번호])</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🛡️ 원본 파일은 절대 수정되지 않으며, 새로운 파일로 결과가 저장됩니다.</p>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const progress = document.getElementById('progress');
+        const result = document.getElementById('result');
+        const resultMessage = document.getElementById('resultMessage');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 드래그 앤 드롭 이벤트
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+        dropZone.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                updateDropZoneWithFile(files[0]);
+                processFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                updateDropZoneWithFile(files[0]);
+                processFile(files[0]);
+            }
+        }
+
+        function updateDropZoneWithFile(file) {
+            const dropZoneContent = document.querySelector('.drop-zone-content');
+            dropZoneContent.innerHTML = `
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">${file.name}</div>
+                <div class="upload-hint">파일 크기: ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+            `;
+        }
+
+        let progressInterval;
+
+        function processFile(file) {
+            console.log('파일 처리 시작:', file.name, file.size, file.type);
+            
+            // 파일 검증
+            if (!file.name.toLowerCase().endsWith('.xlsx')) {
+                console.error('파일 형식 오류:', file.name);
+                showResult('엑셀 파일(.xlsx)만 업로드 가능합니다.', 'error');
+                return;
+            }
+
+            if (file.size > 50 * 1024 * 1024) {
+                console.error('파일 크기 오류:', file.size);
+                showResult('파일 크기는 50MB를 초과할 수 없습니다.', 'error');
+                return;
+            }
+            
+            console.log('파일 검증 통과, 업로드 시작');
+
+            // 처리 모드 확인
+            const processingMode = document.querySelector('input[name="processing_mode"]:checked').value;
+
+            // UI 업데이트
+            hideResult();
+            showProgress();
+            startProgressPolling();
+
+            // 파일 업로드
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('processing_mode', processingMode);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('서버 응답 상태:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('서버 응답 데이터:', data);
+                stopProgressPolling();
+                hideProgress();
+                if (data.success) {
+                    showResult(`🎉 ${data.message}`, 'success');
+                    // 다운로드 버튼 추가
+                    if (data.filename) {
+                        showDownloadButton(data.filename);
+                    }
+                } else {
+                    showResult(`❌ ${data.error}`, 'error');
+                }
+                resetBtn.style.display = 'inline-block';
+            })
+            .catch(error => {
+                console.error('업로드 오류:', error);
+                stopProgressPolling();
+                hideProgress();
+                showResult(`❌ 처리 중 오류가 발생했습니다: ${error.message}`, 'error');
+                resetBtn.style.display = 'inline-block';
+            });
+        }
+
+        function showProgress() {
+            progress.style.display = 'block';
+            dropZone.style.display = 'none';
+        }
+
+        function hideProgress() {
+            progress.style.display = 'none';
+            dropZone.style.display = 'block';
+        }
+
+        function showResult(message, type) {
+            result.className = `result ${type}`;
+            result.style.display = 'block';
+            resultMessage.textContent = message;
+        }
+
+        function hideResult() {
+            result.style.display = 'none';
+            resetBtn.style.display = 'none';
+            // 다운로드 버튼도 제거
+            const downloadBtns = result.querySelectorAll('button:not(#resetBtn)');
+            downloadBtns.forEach(btn => btn.remove());
+        }
+
+        // 진행 상황 폴링 함수들
+        function startProgressPolling() {
+            updateProgress(); // 즉시 한 번 업데이트
+            progressInterval = setInterval(updateProgress, 500); // 0.5초마다 업데이트
+        }
+
+        function stopProgressPolling() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        }
+
+        function updateProgress() {
+            fetch('/progress')
+                .then(response => response.json())
+                .then(data => {
+                    // 진행률 바 업데이트
+                    const progressFill = document.getElementById('progressFill');
+                    progressFill.style.width = `${data.percentage}%`;
+                    
+                    // 각 정보 업데이트
+                    document.getElementById('currentColumn').textContent = data.column || '-';
+                    document.getElementById('progressPercent').textContent = `${data.percentage}%`;
+                    document.getElementById('progressSpeed').textContent = data.speed || '0.0 건/초';
+                    document.getElementById('progressETA').textContent = data.eta || '계산 중...';
+                    document.getElementById('progressCount').textContent = `${data.processed} / ${data.total}`;
+                    
+                    // 진행 상황에 따른 메시지 업데이트
+                    const progressMessage = document.getElementById('progressMessage');
+                    if (data.column) {
+                        progressMessage.textContent = `🔄 '${data.column}' 컬럼 처리 중... ⏳`;
+                    } else {
+                        progressMessage.textContent = '개인정보 제거 중... 잠시만 기다려주세요 ⏳';
+                    }
+                    
+                    // 완료되면 폴링 중지
+                    if (data.percentage >= 100 || data.column === "완료") {
+                        stopProgressPolling();
+                        // 진행률을 100%로 확실히 설정
+                        document.getElementById('progressFill').style.width = '100%';
+                        document.getElementById('progressPercent').textContent = '100%';
+                        document.getElementById('progressMessage').textContent = '처리 완료! 결과를 확인하세요 ✅';
+                    }
+                })
+                .catch(error => {
+                    console.error('진행 상황 업데이트 실패:', error);
+                });
+        }
+
+        function resetDropZone() {
+            const dropZoneContent = document.querySelector('.drop-zone-content');
+            dropZoneContent.innerHTML = `
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">엑셀 파일을 여기에 드래그하거나 클릭하여 선택하세요</div>
+                <div class="upload-hint">(.xlsx 파일만 지원, 최대 50MB)</div>
+            `;
+        }
+
+        function showDownloadButton(filename) {
+            const result = document.getElementById('result');
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn';
+            downloadBtn.style.marginTop = '15px';
+            downloadBtn.innerHTML = '📥 파일 다운로드';
+            downloadBtn.onclick = () => {
+                window.location.href = `/download/${filename}`;
+            };
+            result.appendChild(downloadBtn);
+        }
+
+        // 리셋 버튼
+        resetBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            hideResult();
+            stopProgressPolling(); // 폴링도 중지
+            resetDropZone(); // 드롭존 원래 상태로 복원
+        });
+    </script>
+</body>
+</html>

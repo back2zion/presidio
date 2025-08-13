@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  korea-expressway-pii-remover:
+    build: .
+    container_name: korea-expressway-pii-remover
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data  # 데이터 파일 볼륨 마운트
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
