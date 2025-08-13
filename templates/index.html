@@ -12,8 +12,8 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background: linear-gradient(135deg, #0066CC 0%, #2746C0 35%, #E11937 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,10 +23,12 @@
         
         .container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 600px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 48px;
+            max-width: 640px;
             width: 100%;
             text-align: center;
         }
@@ -36,30 +38,32 @@
         }
         
         .title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
         }
         
         .subtitle {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 32px;
+            font-weight: 400;
         }
         
         .drop-zone {
-            border: 3px dashed #ccc;
-            border-radius: 15px;
-            padding: 50px 20px;
-            margin: 30px 0;
-            transition: all 0.3s ease;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 48px 24px;
+            margin: 32px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            background: #fafafa;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
         
         .drop-zone.dragover {
-            border-color: #667eea;
+            border-color: #0066CC;
             background: #f0f4ff;
             transform: scale(1.02);
         }
@@ -71,13 +75,14 @@
         .upload-icon {
             font-size: 48px;
             margin-bottom: 20px;
-            color: #667eea;
+            color: #0066CC;
         }
         
         .upload-text {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 16px;
+            color: #334155;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
         
         .upload-hint {
@@ -90,15 +95,17 @@
         }
         
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2746C0 0%, #1e3a8a 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 15px 30px;
+            border-radius: 12px;
+            padding: 16px 32px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            margin: 10px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 12px;
+            box-shadow: 0 4px 14px 0 rgba(39, 70, 192, 0.3);
         }
         
         .btn:hover {
@@ -126,7 +133,7 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #0066CC, #2746C0);
             border-radius: 6px;
             transition: width 0.5s ease;
             animation: pulse 2s infinite;
@@ -152,7 +159,7 @@
         }
         
         .stat-label {
-            color: #666;
+            color: #7B8388;
             font-weight: 500;
         }
         
@@ -167,6 +174,18 @@
             50% { opacity: 0.7; }
         }
         
+        /* 한국도로공사 브랜드 컬러 변수 */
+        :root {
+            --ex-red: #E11937;
+            --ex-blue: #0066CC;
+            --ex-dark-blue: #2746C0;
+            --ex-brown: #7B4A3A;
+            --ex-dark-gray: #7B8388;
+            --ex-light-gray: #D2D2D2;
+            --ex-gold: #B58B3D;
+            --ex-silver: #8E8E8E;
+        }
+        
         .result {
             display: none;
             margin: 20px 0;
@@ -176,7 +195,7 @@
         
         .result.success {
             background: #d4edda;
-            border: 1px solid #c3e6cb;
+            border: 2px solid #0066CC;
             color: #155724;
         }
         
@@ -192,9 +211,10 @@
         }
         
         .features h3 {
-            color: #333;
+            color: #2746C0;
             margin-bottom: 15px;
             text-align: center;
+            font-weight: bold;
         }
         
         .feature-list {
@@ -222,14 +242,30 @@
             text-align: center;
         }
         
+        /* Radio button interactions */
+        input[type="radio"] + div ~ div {
+            transition: all 0.2s;
+        }
+        
+        input[type="radio"]:checked + div ~ div {
+            color: #2746C0 !important;
+            font-weight: 700;
+        }
+        
+        label:has(input[type="radio"]:not(:checked)) {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        
+        label:has(input[type="radio"]:checked) {
+            background: #f0f4ff !important;
+            border-color: #2746C0 !important;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
                 margin: 10px;
-            }
-            
-            .feature-list {
-                grid-template-columns: 1fr;
             }
             
             .title {
@@ -241,26 +277,28 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">🛣️ 한국도로공사 민원 데이터<br>개인정보 제거 도구</h1>
-            <p class="subtitle">엑셀 파일을 업로드하면 자동으로 개인정보가 마스킹됩니다</p>
+            <div style="margin-bottom: 48px;">
+                <div style="display: inline-flex; align-items: center; margin-bottom: 24px;">
+                    <img src="/static/images/ex-logo.png" alt="한국도로공사 EX 로고" 
+                         style="height: 32px; width: auto; margin-right: 12px;">
+                    <div style="font-size: 14px; color: #64748b; font-weight: 600; letter-spacing: 0.5px;">한국도로공사</div>
+                </div>
+                <h1 class="title">PII 제거 시스템</h1>
+                <p class="subtitle">민원 데이터의 개인정보를 안전하게 제거합니다</p>
+            </div>
         </div>
         
-        <div class="processing-mode" style="margin-bottom: 20px;">
-            <h3 style="color: #333; margin-bottom: 15px;">🤖 처리 모드 선택</h3>
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="radio" name="processing_mode" value="llm" style="margin-right: 8px;">
-                    <span style="font-size: 14px; color: #333;">
-                        🧠 LLM 모드
-                        <br><small style="color: #666;">문맥 이해로 정확한 PII 식별 (느림)</small>
-                    </span>
+        <div class="processing-mode" style="margin-bottom: 32px;">
+            <div style="display: flex; justify-content: center; gap: 16px;">
+                <label style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all 0.2s; flex: 1; max-width: 140px; text-align: center;">
+                    <input type="radio" name="processing_mode" value="llm" style="display: none;">
+                    <div style="font-size: 24px; margin-bottom: 4px;">🧠</div>
+                    <div style="font-size: 13px; font-weight: 600; color: #334155;">LLM</div>
                 </label>
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="radio" name="processing_mode" value="regex" checked style="margin-right: 8px;">
-                    <span style="font-size: 14px; color: #333;">
-                        ⚡ 정규식 모드 (추천)
-                        <br><small style="color: #666;">빠른 패턴 기반 처리</small>
-                    </span>
+                <label style="background: #f0f4ff; border: 2px solid #2746C0; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all 0.2s; flex: 1; max-width: 140px; text-align: center;">
+                    <input type="radio" name="processing_mode" value="regex" checked style="display: none;">
+                    <div style="font-size: 24px; margin-bottom: 4px;">⚡</div>
+                    <div style="font-size: 13px; font-weight: 600; color: #2746C0;">정규식</div>
                 </label>
             </div>
         </div>
@@ -313,19 +351,23 @@
         <button class="btn" id="resetBtn" style="display: none;">🔄 새 파일 처리하기</button>
         
         <div class="features">
-            <h3>🔍 마스킹되는 개인정보</h3>
-            <div class="feature-list">
-                <div class="feature-item">담당자 이름 (정제호 대리 → [담당자명])</div>
-                <div class="feature-item">개인 이름 (김철수 → [이름])</div>
-                <div class="feature-item">연락처 (010-1234-5678 → [연락처])</div>
-                <div class="feature-item">이메일 (test@ex.co.kr → [이메일주소])</div>
-                <div class="feature-item">기관정보 (한국도로공사... → [기관연락처정보])</div>
-                <div class="feature-item">차량번호 (12가3456 → [차량번호])</div>
+            <h3 style="font-size: 16px; margin-bottom: 16px;">제거 대상</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; font-size: 13px;">
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">담당자명</div>
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">개인이름</div>
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">연락처</div>
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">이메일</div>
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">기관정보</div>
+                <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; text-align: center; color: #64748b;">차량번호</div>
             </div>
         </div>
         
-        <div class="footer">
-            <p>🛡️ 원본 파일은 절대 수정되지 않으며, 새로운 파일로 결과가 저장됩니다.</p>
+        <div class="footer" style="border-top: 2px solid #E5E5E5; padding-top: 20px; margin-top: 30px;">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div style="color: #2746C0; font-weight: bold; margin-bottom: 5px;">한국도로공사 디지털기획처</div>
+                <div style="color: #7B8388; font-size: 12px;">Korea Expressway Corporation Digital Planning Department</div>
+            </div>
+            <p style="color: #7B8388; font-size: 11px;">🛡️ 원본 파일 보호 • 안전한 처리</p>
         </div>
     </div>
 

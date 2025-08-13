@@ -873,7 +873,7 @@ JSON: {{"0":[{{"type":"PERSON","text":"이름"}}], "1":[]}}"""
 
 
 # Flask 웹 애플리케이션
-app = Flask(__name__)
+app = Flask(__name__, static_folder='images', static_url_path='/static/images')
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB 제한
 
 # PII 제거 엔진 전역 인스턴스

@@ -48,6 +48,7 @@ RUN python -m spacy download ko_core_news_sm
 # 애플리케이션 파일 복사
 COPY remover.py .
 COPY templates/ ./templates/
+COPY images/ ./images/
 COPY models/ ./models/
 COPY 한국도로공사_민원_테스트데이터.xlsx .
 

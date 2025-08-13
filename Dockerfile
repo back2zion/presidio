@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 애플리케이션 파일 복사
 COPY remover.py .
 COPY templates/ ./templates/
+COPY images/ ./images/
 COPY 한국도로공사_민원_테스트데이터.xlsx .
 
 # 포트 노출
