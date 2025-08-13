@@ -14,7 +14,8 @@ case $choice in
     1)
         echo "🖥️ CPU 버전 테스트 시작..."
         
-        # CPU Docker 이미지 빌드
+        # CPU Docker 이미지 빌드 (BuildKit 사용)
+        export DOCKER_BUILDKIT=1
         docker build -f Dockerfile -t korea-pii-cpu:test .
         
         # 실행
@@ -29,7 +30,8 @@ case $choice in
     2)
         echo "📦 내부망용 패키지 생성..."
         
-        # CPU 버전 빌드
+        # CPU 버전 빌드 (BuildKit 사용)
+        export DOCKER_BUILDKIT=1
         docker build -f Dockerfile -t korea-pii-cpu:v2.0.0 .
         
         # GPU 버전 빌드 (실행은 안되지만 이미지는 생성 가능)
@@ -37,6 +39,7 @@ case $choice in
         read -p "선택: " gpu_choice
         
         if [ "$gpu_choice" = "y" ]; then
+            export DOCKER_BUILDKIT=1
             docker build -f Dockerfile.gpu -t korea-pii-gpu:v2.0.0 .
             docker save -o korea-pii-gpu.tar korea-pii-gpu:v2.0.0
             gzip korea-pii-gpu.tar

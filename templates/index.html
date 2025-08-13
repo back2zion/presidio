@@ -432,8 +432,8 @@
                 if (data.success) {
                     showResult(`🎉 ${data.message}`, 'success');
                     // 다운로드 버튼 추가
-                    if (data.filename) {
-                        showDownloadButton(data.filename);
+                    if (data.filename && data.file_data) {
+                        showDownloadButton(data.filename, data.file_data);
                     }
                 } else {
                     showResult(`❌ ${data.error}`, 'error');
@@ -532,14 +532,18 @@
             `;
         }
 
-        function showDownloadButton(filename) {
+        function showDownloadButton(filename, fileData) {
             const result = document.getElementById('result');
             const downloadBtn = document.createElement('button');
             downloadBtn.className = 'btn';
             downloadBtn.style.marginTop = '15px';
             downloadBtn.innerHTML = '📥 파일 다운로드';
             downloadBtn.onclick = () => {
-                window.location.href = `/download/${filename}`;
+                // base64 데이터를 직접 다운로드
+                const link = document.createElement('a');
+                link.href = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${fileData}`;
+                link.download = filename;
+                link.click();
             };
             result.appendChild(downloadBtn);
         }
